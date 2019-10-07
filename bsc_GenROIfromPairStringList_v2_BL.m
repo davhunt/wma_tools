@@ -89,7 +89,9 @@ for iROIs=1:length(stringCells)
     %type in something with underscores.  This will work with everything
     %internal to brainlife, but will not work with arbitrarily named
     %uploads from users.
-    currChars=num2cell(stringCells{iROIs});
+    %currChars=num2cell(stringCells{iROIs});
+    currChars=split(stringCells{iROIs},' ').';
+    currChars=currChars(~cellfun('isempty',currChars));
     numCells=cellfun(@str2num,currChars,'UniformOutput',false);
     numBool=~cell2mat(cellfun(@isempty,numCells,'UniformOutput',false));
     %ignoring the stem, whatever it is
@@ -126,10 +128,10 @@ for iROIs=1:length(stringCells)
     if ~notDefined('atlas')&&atlasFlag
         mergedROI =bsc_roiFromAtlasNums(atlas,ROInums, smoothKernel);
         %operating under presumption that roi.name is a thing...
-        currROIName=fullfile(pwd,strcat('/',roiDirPathOut,'/',roiStem,mergedROI.name,'.nii.gz'));
+        currROIName=fullfile(strcat(roiDirPathOut,roiStem,mergedROI.name,'.nii.gz'))
         %write file name to text file
         nameToWrite=erase(currROIName,'.nii.gz');
-        fprintf(fileID, strcat(nameToWrite,'\n'))
+        fprintf(fileID, strcat(currROIName,'\n'))
         [~, ~]=dtiRoiNiftiFromMat (mergedROI,atlas,currROIName,1);
     elseif ~notDefined('ROIdirIN')&&dirFlag
         roiDirContents=dir(ROIdirIN);

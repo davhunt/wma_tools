@@ -69,7 +69,8 @@ mergedROIs=strsplit(loadTxt,'\n');
 mergedROIs=mergedROIs(~cellfun('isempty',mergedROIs));
 
 [classification]=multiROIpairSeg(feORwbfg,mergedROIs);
-save('/classification/classification.mat','classification')
+mkdir(fullfile(pwd,'classification'));
+save('./classification/classification.mat','classification')
 fprintf('\n classification structure stored with %i streamlines identified across %i tracts',...
     sum(classification.index>0),length(classification.names))
 wma_formatForBrainLife_v2(classification,feORwbfg)
